@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const Prompt = require('./Prompt');
 
 const User = sequelize.define('User', {
   username: {
@@ -17,5 +18,8 @@ const User = sequelize.define('User', {
     allowNull: false,
   },
 });
+
+User.hasMany(Prompt, { foreignKey: 'userId' });
+Prompt.belongsTo(User, { foreignKey: 'userId' });
 
 module.exports = User;
