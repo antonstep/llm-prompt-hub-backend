@@ -27,6 +27,7 @@ sequelize.sync()
 // Use Routes
 const userRoutes = require('./routes/userRoutes');
 const promptRoutes = require('./routes/promptRoutes');
+
 app.use('/api/users', userRoutes);
 app.use('/api/prompts', promptRoutes);
 
