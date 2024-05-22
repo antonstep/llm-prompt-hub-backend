@@ -21,10 +21,13 @@ router.post('/', authenticateToken, async (req, res) => {
 
 // Get all prompts
 router.get('/', async (req, res) => {
+  console.log("Fetching all prompts...");
   try {
     const prompts = await Prompt.findAll({ include: User });
+    console.log("Prompts retrieved successfully:", prompts);
     res.json(prompts);
   } catch (error) {
+    console.error("Error fetching prompts:", error);
     res.status(400).json({ error: error.message });
   }
 });
