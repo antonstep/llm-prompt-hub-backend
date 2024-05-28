@@ -1,39 +1,37 @@
-require('dotenv').config();
-const express = require('express');
-const { Sequelize } = require('sequelize');
-const cors = require('cors');
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+const PromptList = () => {
+  const [prompts, setPrompts] = useState([]);
 
-// Middleware to parse JSON
-app.use(express.json());
-app.use(cors()); // Enable CORS
+  useEffect(() => {
+    const fetchPrompts = async () => {
+      const baseUrl = 'https://llm-prompt-hub-backend.onrender.com'; // Base URL for the backend
+      try {
+        const response = await axios.get(`${baseUrl}/api/prompts`);
+        setPrompts(response.data);
+      } catch (error) {
+        console.error('Error fetching prompts:', error.response ? error.response.data : error.message);
+      }
+    };
 
-// Simple route for testing
-app.get('/', (req, res) => {
-  res.send('LLM Prompt Hub API');
-});
+    fetchPrompts();
+  }, []);
 
-// Initialize Sequelize
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: 'postgres',
-  protocol: 'postgres',
-  logging: false, // Set to true for logging SQL queries
-});
+  return (
+    <div>
+      <h1>Prompts</h1>
+      {prompts.length > 0 ? (
+        <ul>
+          {prompts.map(prompt => (
+            <li key={prompt.id}>{prompt.title}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No prompts available.</p>
+      )}
+    </div>
+  );
+};
 
-sequelize.sync()
-  .then(() => console.log('Database synced'))
-  .catch((err) => console.error('Error syncing database', err));
-
-// Use Routes
-const userRoutes = require('./routes/userRoutes');
-const promptRoutes = require('./routes/promptRoutes');
-
-app.use('/api/users', userRoutes);
-app.use('/api/prompts', promptRoutes);
-
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+export default PromptList;
