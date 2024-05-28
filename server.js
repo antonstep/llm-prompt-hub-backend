@@ -8,7 +8,9 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware to parse JSON
 app.use(express.json());
-app.use(cors()); // Enable CORS
+app.use(cors({
+  origin: 'https://antonstep.github.io/llm-prompt-hub-frontend/'
+}));
 
 // Simple route for testing
 app.get('/', (req, res) => {
